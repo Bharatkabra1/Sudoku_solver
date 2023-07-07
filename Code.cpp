@@ -1,78 +1,106 @@
 #include<bits/stdc++.h>
 using namespace std;
-const int Boardsize = 9;
-const int Cellsize = 3;
-int board[Boardsize][Boardsize];
-bool check(int ch, int row, int col){
-    //for check in row
-    for(int c=0;c<Boardsize;c++){
-        if(c!=col && board[row][c]==ch){
+
+#define int long long
+int ans=0,n,cellsize;
+int a[100][100]; 
+
+bool check(int ch,int row,int col)
+{
+    for(int c=0;c<n;c++)
+    {
+        if(c!=col && a[row][c]==ch)
             return false;
-        }
     }
-    //for check in column
-    for(int r=0;r<Boardsize;r++){
-        if(r!=row && board[r][col]==ch){
+
+    for(int r=0;r<n;r++)
+    {
+        if(r!=row && a[r][col]==ch)
             return false;
-        }
     }
-    //for check in square
-    int str=(row/Cellsize)*Cellsize;
-    int stc=(col/Cellsize)*Cellsize;
-    for(int dx=0;dx<Cellsize;dx++){
-        for(int dy=0;dy<Cellsize;dy++){
-            if(str+dx==row && stc+dy==col){
+
+    int str=(row/cellsize)*cellsize;
+    int stc=(col/cellsize)*cellsize;
+
+    for(int dx=0;dx<cellsize;dx++)
+    {
+        for(int dy=0;dy<cellsize;dy++)
+        {
+            if((str+dx)==row && (stc+dy)==col)
                 continue;
-            }
-            if(board[str+dx][stc+dy]==ch){
+
+            if(a[str+dx][stc+dy]==ch)
                 return false;
-            }
         }
-    }return true;
+    }
+
+    return true;
 }
-int ans=0;
-void rec(int row, int col){
-    if(col==Boardsize){
+
+void rec(int row, int col)
+{
+    if(col==n)
+    {
         rec(row+1,0);
         return;
     }
-    if(row==Boardsize){
-        //base case
+    if(row==n)
+    {
         ans++;
-        for(int i=0;i<Boardsize;i++){
-            for(int j=0;j<Boardsize;j++){
-                cout<<board[i][j]<<" ";
+
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                cout<<a[i][j]<<" ";
             }
-        }return;
+            cout<<"\n";
+        }
+
+        return;
     }
-    if(board[row][col]==0){
-        //we need to fill
-        for(int ch=1;ch<=Boardsize;ch++){
-            if(check(ch,row,col)){
-                board[row][col]=ch;
+
+    if(a[row][col]==0)
+    {
+        for(int ch=1;ch<=n;ch++)
+        {
+            if(check(ch,row,col))
+            {
+                a[row][col]=ch;
                 rec(row,col+1);
-                board[row][col]=0;
+                a[row][col]=0;
             }
         }
-    }else{
-        //pre-filled
-        if(check(board[row][col],row,col)){
+    }
+    else
+    {
+        if(check(a[row][col],row,col))
+        {
             rec(row,col+1);
         }
     }
 }
-void solve(){
-    for(int i=0;i<Boardsize;i++){
-        for(int j=0;j<Boardsize;j++){
-            cin>>board[i][j];
+
+void solve()
+{
+    cin>>n>>cellsize;
+    
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            cin>>a[i][j];
         }
     }
+
+    rec(0,0);
 }
-signed main(){
+
+signed main()
+{
     ios_base::sync_with_stdio(0);
-    cin.tie(0);cout.tie(0);
-    int _t=1; //cin>>_t;
-    while(_t--){
-        solve();
-     }
+    cin.tie(0);
+    cout.tie(0);
+    
+    solve();
 }
